@@ -1,0 +1,87 @@
+
+html {
+    font-family: monospace;
+    margin: 0;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#content-wrapper {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: center;
+
+}
+
+.table-title {
+
+}
+
+.schedule-table {
+    text-align: left;
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+    border-collapse: collapse;
+}
+
+.schedule-table tr {
+    height: 25px;
+}
+
+.schedule-table .elevated {
+    background-color: lightblue;
+}
+
+.schedule-table .major {
+    background-color: lightgreen;
+}
+
+.schedule-table th, .schedule-table td  {
+    border: 1px solid black;
+    padding: 0 10px 0 5px;
+}
+
+.schedule-table-geo-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.schedule-table-geo-link:hover {
+    text-decoration: underline;
+}
+
+.basic-scatterplot-svg {
+
+}
+
+#scatter-gridline-group {
+    background-color: rgb(207, 117, 117);
+}
+
+.scatter-gridline-group line {
+    stroke: black;
+    stroke-width: 1px;
+}
+
+
+/* ---- SVG STYLING --- */
+
+
+.svg-chart {
+    box-shadow: rgba(0, 0, 0, 0.2) 0 0 3px;
+}
+
+.tick-y-cross {
+    stroke: rgba(0, 0, 0, 0.1);
+}
+
