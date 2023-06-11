@@ -41,7 +41,7 @@ axios.get(url).then(response => {
     const outString = JSON.stringify(events, null, 2); // 2 spaces for pretty formatting
 
     // Write to a file
-    fs.writeFile(`../data/espn_tournament_ids_${year}.json`, outString, err => {});
+    fs.writeFile(`../data/tournament_ids/espn_tournament_ids_${year}.json`, outString, err => {});
 
 });
 
