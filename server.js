@@ -1,11 +1,22 @@
 
-// Packages
-const express  = require("express");
-const { readFile } = require("fs");
+// Module imports
+import express from 'express';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+// Custom module imports
+import {multiLineChart} from "./visualization.js";
 
 
-// Create express app
+// define __filename and __dirname for use by template renderer
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
+// Create and configure express app
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
 
 
 /**
@@ -29,10 +40,8 @@ app.use('/static', express.static("static"));
  */
 app.get("/", function (request, response) {
 
-    // Load the schedule JSON data from file
-    readFile("templates/index.html", "utf-8", (err, html) => {
-        response.send(html);
-    })
+    // Render svg chart into template and return
+    response.render("index", { chartSvg: multiLineChart() })
 
 })
 
