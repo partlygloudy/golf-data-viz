@@ -24,7 +24,7 @@ for (let y=startYear; y<=stopYear; y++) {
             let dataString = "";
             response.data["seasons"].forEach((yearData) => {
                 if (yearData["year"] === y) {
-                    dataString = JSON.stringify(yearData, null, 2);;
+                    dataString = JSON.stringify(yearData, null, 2);
                 }
             })
 

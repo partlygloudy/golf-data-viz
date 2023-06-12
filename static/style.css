@@ -85,3 +85,9 @@ body {
     stroke: rgba(0, 0, 0, 0.1);
 }
 
+.data-path {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+

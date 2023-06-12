@@ -41,7 +41,7 @@ app.use('/static', express.static("static"));
 app.get("/", function (request, response) {
 
     // Render svg chart into template and return
-    response.render("index", { chartSvg: multiLineChart() })
+    response.render("index", { chartSvg: multiLineChart(2023, 401465520) })
 
 })
 
