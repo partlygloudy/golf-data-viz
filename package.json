@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "Visualizations of professional golf data, including graphics that update in real time during tournaments",
-  "main": "visualization.js",
+  "main": "data_utils.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

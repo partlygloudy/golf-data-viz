@@ -87,7 +87,31 @@ body {
 
 .data-path {
     fill: none;
-    stroke: steelblue;
+    stroke: rgb(220, 220, 220);
+    stroke-width: 1px;
+}
+
+.data-path-highlighted {
+    stroke: darkgreen;
     stroke-width: 1.5px;
+}
+
+.cut-line-vert {
+    fill: none;
+    stroke: rgba(100, 0, 0, 1.0);
+    stroke-width: 0.75px;
+}
+
+.cut-line-horiz {
+    fill: none;
+    stroke: rgba(100, 0, 0, 1.0);
+    stroke-width: 0.75px;
+}
+
+.selected-hole-vert {
+    fill: none;
+    stroke: rgba(0, 0, 100, 1.0);
+    stroke-width: 0.5px;
+    stroke-dasharray: 4px 3px;
 }
 
