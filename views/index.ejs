@@ -28,6 +28,43 @@
 
     <div id="content-wrapper">
 
+        <!-- Wrapper for all elements of the chart, including svg, leaderboard, and any labels/captions -->
+        <div id="chart-wrapper">
+
+            <!-- Leaderboard appearing to the left of the svg -->
+            <div id="leaderboard-table-wrapper">
+
+                <table id="leaderboard-table">
+
+                    <thead>
+                        <tr class="leaderboard-header-row">
+                            <th class="leaderboard-col-rank">Rank</th>
+                            <th class="leaderboard-col-name">Name</th>
+                            <th class="leaderboard-col-score">Score</th>
+                            <th class="leaderboard-col-round">R1</th>
+                            <th class="leaderboard-col-round">R2</th>
+                            <th class="leaderboard-col-round">R3</th>
+                            <th class="leaderboard-col-round">R4</th>
+                            <th class="leaderboard-col-total">Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="leaderboard-table-body">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- Placeholder for svg which is generated and appended here on page load -->
+            <div id="chart-svg-wrapper">
+
+            </div>
+
+        </div>
+
     </div>
 
 </body>

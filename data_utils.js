@@ -22,9 +22,11 @@ export function loadScorecardData(year, eventId) {
 
         // Concatenate round scores into a single array
         let holeScores = [];
+        let roundTotals = [];
         ["1", "2", "3", "4"].forEach((item) => {
             if (item in playerData["roundData"]) {
                 holeScores = holeScores.concat(playerData["roundData"][item]["scoresToPar"]);
+                roundTotals.push(playerData["roundData"][item]["strokes"].reduce((a, b) => a + b, 0));
             }
         })
 
@@ -46,6 +48,9 @@ export function loadScorecardData(year, eventId) {
             "name": playerData["name"],
             "holeScores": holeScores,
             "holeTotals": holeTotals,
+            "roundTotals": roundTotals,
+            "eventTotal": roundTotals.reduce((a, b) => a + b),
+            "eventScoreToPar": runningScore.at(-1),
             "runningScore": runningScore,
             "cut": cut
         }
@@ -78,7 +83,46 @@ export function loadScorecardData(year, eventId) {
             cutLine = Math.min(cutLine, playerFinal);
         }
 
-    })
+    });
+
+    // Sort the players based on finishing position
+    formattedData.sort(function(a, b) {
+
+        // First sort by cut / not cut
+        if (a["cut"] && !b["cut"]) return 1;
+        if (!a["cut"] && b["cut"]) return -1;
+
+        // If both players cut / not cut, sort by score
+        if (a["eventTotal"] < b["eventTotal"]) return -1;
+        if (a["eventTotal"] > b["eventTotal"]) return 1;
+
+        // If players have the same score, sort alphabetically
+        if (a["name"] < b["name"]) return -1;
+        if (a["name"] > b["name"]) return 1;
+
+        // Should never get here
+        return 0;
+
+    });
+
+    // Assign leaderboard ranking to each player
+    let rank = 1;
+    let prevScore = formattedData[0]["eventTotal"];
+    for (let i=1; i<=formattedData.length; i++) {
+
+        // Get score for current player
+        let playerScore = formattedData[i-1]["eventTotal"];
+
+        // Update rank to i if player not tied with previous player
+        if (i !== 1 && playerScore > prevScore) {
+            rank = i;
+        }
+
+        formattedData[i-1]["rank"] = rank;
+        prevScore = playerScore
+
+    }
+
 
     return {
         "playerData": formattedData,

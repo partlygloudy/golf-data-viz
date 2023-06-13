@@ -1,13 +1,17 @@
 
+/* ----- BASIC PAGE LAYOUT STYLING ----- */
+
 html {
     font-family: monospace;
     margin: 0;
     width: 100%;
+    height: 100%;
 }
 
 body {
     margin: 0;
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,70 +19,120 @@ body {
 }
 
 #content-wrapper {
-    margin-top: 50px;
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: baseline;
+    align-items: center;
     justify-content: center;
-
 }
 
-.table-title {
-
+#chart-wrapper {
+    height: 80%;
+    display: flex;
+    flex-direction: row;
+    padding: 50px 30px;
+    box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 0 3px;
 }
 
-.schedule-table {
-    text-align: left;
-    font-size: 0.9rem;
-    margin-bottom: 40px;
+
+/* ---- LEADERBOARD TABLE ----- */
+
+
+#leaderboard-table-wrapper {
+    position: relative;
+    height: 100%;
+    width: 30%;
+    padding-right: 30px;
+    box-sizing: border-box;
+}
+
+#leaderboard-table-wrapper::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Adjust as needed */
+    background: linear-gradient(
+            to bottom,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,1) 100%
+    );
+}
+
+#leaderboard-table {
+    height: 100%;
+    width: 100%;
+    font-size: 0.7rem;
+    font-family: Arial, sans-serif;
+    padding-bottom: 50px;
+    overflow-y: auto;
+    display: block;
+    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none;  /* IE, Edge */
+    text-align: center;
     border-collapse: collapse;
 }
 
-.schedule-table tr {
-    height: 25px;
+#leaderboard-table::-webkit-scrollbar {
+    display: none; /* Chrome */
 }
 
-.schedule-table .elevated {
-    background-color: lightblue;
+#leaderboard-table thead {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
-.schedule-table .major {
-    background-color: lightgreen;
+#leaderboard-table tr {
+    height: 20px;
 }
 
-.schedule-table th, .schedule-table td  {
-    border: 1px solid black;
-    padding: 0 10px 0 5px;
+#leaderboard-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.schedule-table-geo-link {
-    text-decoration: none;
-    color: inherit;
+.leaderboard-col-rank {
+    width: 40px;
 }
 
-.schedule-table-geo-link:hover {
-    text-decoration: underline;
+.leaderboard-col-name {
+    width: 125px;
 }
 
-.basic-scatterplot-svg {
-
+.leaderboard-col-score {
+    width: 40px;
 }
 
-#scatter-gridline-group {
-    background-color: rgb(207, 117, 117);
+.leaderboard-col-round {
+    width: 15px;
 }
 
-.scatter-gridline-group line {
-    stroke: black;
-    stroke-width: 1px;
+.leaderboard-col-total {
+    width: 40px;
+}
+
+.leaderboard-alt-row {
+    background-color: rgb(245, 245, 245);
 }
 
 
 /* ---- SVG STYLING --- */
 
+#chart-svg-wrapper {
+    height: 100%;
+    width: 70%;
+}
 
 .svg-chart {
-    box-shadow: rgba(0, 0, 0, 0.2) 0 0 3px;
+    height: 100%;
+    max-width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgb(250, 250, 250);
 }
 
 .tick-y-cross {

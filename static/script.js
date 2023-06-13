@@ -17,7 +17,10 @@ function updateChart(year, event) {
         let newSvg = buildChart(data);
 
         // Update the chart on the page
-        $("#content-wrapper").append(newSvg);
+        $("#chart-svg-wrapper").append(newSvg);
+
+        // Update the leaderboard table
+        updateLeaderboard(data);
 
     }, "json");
 
@@ -33,10 +36,10 @@ function buildChart(chartData) {
     const height = 600;
 
     // Empty space on each side of chart (inside svg area)
-    const paddingTop = 40;
-    const paddingRight = 50;
-    const paddingBottom = 40;
-    const paddingLeft = 50;
+    const paddingTop = 20;
+    const paddingRight = 10;
+    const paddingBottom = 20;
+    const paddingLeft = 20;
 
     // Domain (min, max values) of the data along each axis
     const domainX = [0, 72];
@@ -49,8 +52,6 @@ function buildChart(chartData) {
 
     // Create the svg
     const svg = d3.create("svg")
-        .attr("width", width)
-        .attr("height", height)
         .attr("viewBox", [0, 0, width, height])
         .classed("svg-chart", true)
         .on("pointerenter", pointerEnter)
@@ -194,5 +195,44 @@ function buildChart(chartData) {
 
     // Serialize the svg so it can be rendered into template
     return svg.node();
+
+}
+
+
+function updateLeaderboard(chartData) {
+
+    // Generate a table row for each player
+    d3.select("#leaderboard-table-body")
+        .selectAll("tr")
+        .data(chartData["playerData"])
+        .join("tr")
+        .classed("leaderboard-alt-row", (d, i) => {
+            return i % 2 === 1;
+        })
+        .selectAll("td")
+        .data(d => {
+
+            let r3 = "-";
+            let r4 = "-";
+
+            if (!d["cut"]) {
+                r3 = d["roundTotals"][2];
+                r4 = d["roundTotals"][3];
+            }
+
+            return [
+                d["rank"],
+                d["name"],
+                d["eventScoreToPar"],
+                d["roundTotals"][0],
+                d["roundTotals"][1],
+                r3,
+                r4,
+                d["eventTotal"]
+            ];
+
+        })
+        .join("td")
+        .text(pd => pd);
 
 }
