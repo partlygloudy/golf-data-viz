@@ -4,6 +4,7 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import { loadScorecardData } from "./data_utils.js";
+import fs from "fs";
 
 // define __filename and __dirname for use by template renderer
 const __filename = fileURLToPath(import.meta.url);
@@ -52,6 +53,19 @@ app.get("/scorecards/year/:year/event/:event", function (request, response) {
     // Load the data for the requested event and return as JSON
     let data = loadScorecardData(request.params.year, request.params.event);
     response.json(data);
+
+})
+
+
+/**
+ * Request handler to get event ids and names for each year that scorecard
+ * data is available
+ */
+app.get("/events/manifest", function (request, response) {
+
+    // Load event manifest and return
+    const scorecardsRaw = fs.readFileSync("data/event_manifest.json", 'utf8');
+    response.json(JSON.parse(scorecardsRaw));
 
 })
 

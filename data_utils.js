@@ -12,6 +12,7 @@ export function loadScorecardData(year, eventId) {
 
     // Get keys as an array
     let allPlayersData = Object.values(scorecards);
+    let allPlayersIds = Object.keys(scorecards);
 
     // Format the data in the way the graphing function expects
     let formattedData = [];
@@ -46,6 +47,7 @@ export function loadScorecardData(year, eventId) {
         // Build object with formatted player data
         let formattedPlayerData = {
             "name": playerData["name"],
+            "id": allPlayersIds[i],
             "holeScores": holeScores,
             "holeTotals": holeTotals,
             "roundTotals": roundTotals,

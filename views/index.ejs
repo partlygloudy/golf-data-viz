@@ -31,12 +31,36 @@
         <!-- Wrapper for all elements of the chart, including svg, leaderboard, and any labels/captions -->
         <div id="chart-wrapper">
 
-            <!-- Leaderboard appearing to the left of the svg -->
-            <div id="leaderboard-table-wrapper">
+            <!-- Row at the top of the chart, displays tournament title -->
+            <div id="chart-header">
 
-                <table id="leaderboard-table">
+                <div>
+                    <h1 id="chart-title">The PGA Championship</h1>
+                    <h2 id="chart-subtitle">Oak Hill Country Club - Rochester, NY</h2>
+                </div>
 
-                    <thead>
+                <div id="chart-options-bar">
+                    <label id="chart-select-label" for="select-event-year">Select Tournament:</label>
+                    <select name="event-year" class="chart-select" id="select-event-year">
+                        <option value="">--Year--</option>
+                    </select>
+                    <select name="event-name" class="chart-select" id="select-event-name">
+                        <option value="">--Event--</option>
+                    </select>
+                    <div id="chart-submit-button">Go</div>
+                </div>
+
+            </div>
+
+            <!-- Horizontally arranged chart body elements - leaderboard and svg -->
+            <div id="chart-body">
+
+                <!-- Leaderboard appearing to the left of the svg -->
+                <div id="leaderboard-table-wrapper">
+
+                    <table id="leaderboard-table">
+
+                        <thead>
                         <tr class="leaderboard-header-row">
                             <th class="leaderboard-col-rank">Rank</th>
                             <th class="leaderboard-col-name">Name</th>
@@ -47,19 +71,18 @@
                             <th class="leaderboard-col-round">R4</th>
                             <th class="leaderboard-col-total">Total</th>
                         </tr>
-                    </thead>
+                        </thead>
 
-                    <tbody id="leaderboard-table-body">
+                        <tbody id="leaderboard-table-body">
 
-                    </tbody>
+                        </tbody>
 
-                </table>
+                    </table>
 
-            </div>
+                </div>
 
-
-            <!-- Placeholder for svg which is generated and appended here on page load -->
-            <div id="chart-svg-wrapper">
+                <!-- Placeholder for svg which is generated and appended here on page load -->
+                <div id="chart-svg-wrapper"></div>
 
             </div>
 

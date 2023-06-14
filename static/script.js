@@ -2,8 +2,14 @@
 
 $(document).ready(function() {
 
-    // Get data to build chart
+    // Create the chart (leaderboard and svg) and add to the page
     updateChart(2023, 401465523);
+
+    // Populate the dropdown menus for event selection
+    populateSelectInputs();
+
+    // Add event listener to 'Go' button
+    d3.select("#chart-submit-button").on("click", handleClickGo);
 
 });
 
@@ -32,7 +38,7 @@ function buildChart(chartData) {
     const playerData = chartData["playerData"];
 
     // Width and height in pixels of the svg on the screen
-    const width = 1000;
+    const width = 1200;
     const height = 600;
 
     // Empty space on each side of chart (inside svg area)
@@ -88,7 +94,7 @@ function buildChart(chartData) {
         });
 
 
-    // ----- PLOT SCORING DATA ------ //
+    // ----- SCORING DATA ------ //
 
 
     // Split data into x (holes #s), y (cumulative scores), and z dimensions
@@ -111,10 +117,11 @@ function buildChart(chartData) {
         .data(playerData)
         .join("path")
         .classed("data-path", true)
-        .attr("d", player => line(player["holeTotals"]));
+        .attr("id", d => "data-path-" + d["id"])
+        .attr("d", d => line(d["holeTotals"]));
 
 
-    // ----- PLOT CUT LINE ----- //
+    // ----- CUT LINE ----- //
 
     const cutY = yScale(chartData["cutLine"]);
 
@@ -174,13 +181,17 @@ function buildChart(chartData) {
         const name = Z[closestPathIdx];
 
         // Apply "highlighted" class to the closest path, remove from the rest
-        path.classed("data-path-highlighted", d => d["name"] === name);
+        path.classed("data-path-hovered", d => d["name"] === name);
         path.filter(d => d["name"] === name).raise();
+
+        // Move any selected player paths back to the top
+        d3.selectAll(".data-path-selected").raise();
 
         // Move current hole marker to the nearest hole
         let nearestX = d3.least(d3.range(72), h => Math.abs(xScale(h) - x));
         nearestX = xScale(nearestX);
         selectedHoleLine.attr("x1", nearestX).attr("x2", nearestX);
+
     }
 
     function pointerEnter(event) {
@@ -189,6 +200,7 @@ function buildChart(chartData) {
 
     function pointerLeave(event) {
         selectedHoleLine.attr("visibility", "hidden");
+        d3.selectAll(".data-path-hovered").classed("data-path-hovered", false);
     }
 
     // ----- RETURN FINISHED CHART ----- //
@@ -201,38 +213,122 @@ function buildChart(chartData) {
 
 function updateLeaderboard(chartData) {
 
-    // Generate a table row for each player
+    // Select the leaderboard table (body)
     d3.select("#leaderboard-table-body")
+
+        // Create a row for each player
         .selectAll("tr")
         .data(chartData["playerData"])
         .join("tr")
-        .classed("leaderboard-alt-row", (d, i) => {
-            return i % 2 === 1;
+
+        // Add class to alternating rows for highlighting
+        .classed("leaderboard-alt-row", (d, i) => i % 2 === 1)
+
+        // Add class indicating if player was cut
+        .classed("leaderboard-cut-row", d => d["cut"])
+
+        // Add click handler to toggle selected player highlighting
+        .on("click", (e, d) => {
+
+            // Toggle line highlighting in the svg
+            let line = d3.select("#data-path-" + d["id"]);
+            line.classed("data-path-selected", !line.classed("data-path-selected")).raise();
+
+            // Toggle row highlighting in the table
+            let row = d3.select(e.currentTarget);
+            row.classed("leaderboard-selected-row", !row.classed("leaderboard-selected-row"));
+
         })
+
+        // Add hover handler to toggle hovered player highlighting
+        .on("mouseover", (e, d) => {
+            d3.select("#data-path-" + d["id"])
+                .classed("data-path-hovered", true)
+                .raise();
+        })
+        .on("mouseleave", (e, d) => {
+            let path = d3.select("#data-path-" + d["id"])
+                .classed("data-path-hovered", false);
+            if (!path.classed("data-path-selected")) {
+                path.lower();
+            }
+        })
+
+        // Add column data to each row
         .selectAll("td")
         .data(d => {
-
-            let r3 = "-";
-            let r4 = "-";
-
-            if (!d["cut"]) {
-                r3 = d["roundTotals"][2];
-                r4 = d["roundTotals"][3];
-            }
-
             return [
-                d["rank"],
+                d["cut"] ? "CUT" : d["rank"],
                 d["name"],
                 d["eventScoreToPar"],
                 d["roundTotals"][0],
                 d["roundTotals"][1],
-                r3,
-                r4,
+                d["cut"] ? "-" : d["roundTotals"][2],
+                d["cut"] ? "-" : d["roundTotals"][3],
                 d["eventTotal"]
             ];
-
         })
         .join("td")
-        .text(pd => pd);
+
+        // Set the text of the data cell - for over par scores, print '+' before number
+        .text((d, i) => {
+            if (i === 2 && d > 0) {
+                return "+" + d;
+            }
+            return d
+        })
+
+        // For under par scores, add 'td=under' par class so red highlighting is applied
+        .classed("td-under-par", (d, i) => {
+            return i === 2 && d < 0;
+        });
+
+}
+
+
+function populateSelectInputs() {
+
+    // Request data for the specified tournament
+    $.get("/events/manifest", data => {
+
+        let yearSelect = d3.select("#select-event-year");
+
+        yearSelect.selectAll("option")
+            .data(Object.entries(data))
+            .join("option")
+            .text(d => d[0])
+            .attr("value", d => d[0]);
+
+        yearSelect.on("change", (e) => {
+
+            // Check which year is currently selected
+            let selectedYear = yearSelect.node().value;
+            let eventData = data[selectedYear];
+
+            // Remove the current options from the event select menu
+            let eventSelect = d3.select("#select-event-name");
+            eventSelect.selectAll("option").remove();
+
+            // Populate the menu with the events for the selected year
+            eventSelect.selectAll("option")
+                .data(eventData)
+                .join("option")
+                .text(d => d["name"]);
+
+        });
+
+    }, "json");
+
+}
+
+
+function handleClickGo(e) {
+
+    // Get the currently selected options
+    let year = d3.select('#select-event-year').select('option:checked').datum()[0];
+    let event = d3.select('#select-event-name').select('option:checked').datum()["id"];
+
+    // Update the chart
+    updateChart(year, event);
 
 }
